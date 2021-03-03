@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="//www.nike.com/favicon.ico" />
+    <link
+      rel="stylesheet"
+      href="//www.nike.com/assets/ncss/glyphs/2.5/css/glyphs.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="//www.nike.com/assets/ncss/3.1/dotcom/desktop/css/ncss.en-us.min.css"
+    />
+    <script id="bmscript" type="text/javascript" src="/builderManager.bundle.js"></script>
+    <script>
+      const bmScript = document.createElement('script');
+      bmScript.id = 'bmscript';
+      bmScript.type = 'text/javascript';
+      bmScript.onload = (() => {
+        console.log('Hit da script.');
+        nikeIdBuilder(document.getElementById('root'), {
+          'nike-api-caller-id': 'com.nike:builderManager.localhost',
+          country: 'US',
+          locale: 'en_US',
+          myDesignsEnabled: true,
+          myDesignCapacity: 15,
+          // pathName: 'af1LowUnlockHO20',
+          // pathName: 'af1LowEssSP20',
+          pathName: 'AM90EssSP20_cl',
+          // prebuildId: 470804114, // PrebuildID for AM90
+          prebuildId: 1696687666, // PrebuildId for AF1 Unlocked
+          bridge: {
+            onProductLoad: () => {
+              // eslint-disable-next-line no-console
+              console.log('calling pdp onProductLoad');
+            },
+            onDone: () => {
+              // eslint-disable-next-line no-console
+              console.log('calling pdp onDone');
+            },
+          },
+        }).then((pdpApi) => {
+          window.pdpApi = pdpApi;
+          window.pdpApi.setIsVisible(true);
+        });
+      })
+      bmScript.src = '/public/builderManager.bundle.js';
+      document.querySelector('head').appendChild(bmScript);
+    </script>
+    <title>BX3D - Community Gallery</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
