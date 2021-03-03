@@ -25,6 +25,23 @@ export enum MC {
   LOGO = "logo"
 }
 
+export const MC_ID_MAP = {
+  BASE : "Base",
+  OVERLAY : "Overlay",
+  MUDGUARD : "Mudguard",
+  SWOOSH : "Swoosh",
+  EYESTAY : "EyestayLogoWindow",
+  UPPER_EYESTAY : "UpperEyestay",
+  BACKTAB : "Backtab",
+  LACES : "Laces",
+  LINING : "Lining",
+  MIDSOLE : "Midsole",
+  WEDGE : "MidsoleWedge",
+  AIRBAG : "Airbag",
+  OUTSOLE : "Outsole",
+  LOGO : "BacktabLogo"
+}
+
 export enum COLORS {
   BLACK = "black",
   GREY = "grey",
@@ -38,4 +55,36 @@ export enum COLORS {
   RED = "red",
   HONEYCOMB = "honeycomb",
   OTHER_PINK = "otherpink"
+}
+
+export const COLOR_ID_MAP = {
+  black: 'Black',
+  grey: 'SmokeGrey',
+  sail: 'Sail',
+  white: 'White',
+  thermalgreen: 'ThermalGreen',
+  rainforest: 'Rainforest',
+  blue: 'GameRoyal',
+  darkblue: 'BlueVoid',
+  pink: 'MagicFlamingo',
+  red: 'UniversityRed',
+  honeycomb: 'Honeycomb',
+  otherpink: 'MagicEmber'
+}
+
+export const MC_ID_TO_Q_MAP = {
+  Airbag: "AM90EssSP20_cl:Airbag:AirbagColor",
+  Backtab: "AM90EssSP20_cl:Backtab:BacktabColor",
+  Logo: "AM90EssSP20_cl:BacktabLogo:BacktabLogoColor",
+  Base: "AM90EssSP20_cl:Base:BaseColor",
+  EyestayLogoWindow: "AM90EssSP20_cl:EyestayLogoWindow:EyestayLogoWindowColor",
+  Laces: "AM90EssSP20_cl:Laces:LacesColor",
+  Lining: "AM90EssSP20_cl:Lining:LiningColor",
+  Midsole: "AM90EssSP20_cl:Midsole:MidsoleColor",
+  MidsoleWedge: "AM90EssSP20_cl:MidsoleWedge:MidsoleWedgeColor",
+  Mudguard: "AM90EssSP20_cl:Mudguard:MudguardColor",
+  Outsole: "AM90EssSP20_cl:Outsole:OutsoleColor",
+  Overlay: "AM90EssSP20_cl:Overlay:OverlayColor",
+  Swoosh: "AM90EssSP20_cl:Swoosh:SwooshColor",
+  UpperEyestay: "AM90EssSP20_cl:UpperEyestay:UpperEyestayColor",
 }

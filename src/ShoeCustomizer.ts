@@ -11,7 +11,6 @@ export class ShoeCustomizer {
   ffmpeg: any;
   frame: string;
   bot: IRCBot;
-  currentMC: MC;
   commandHandler: any;
 
   constructor() {
@@ -20,11 +19,6 @@ export class ShoeCustomizer {
     this.session = null;
     this.frame = null;
     this.commandHandler = null;
-    this.currentMC = MC.BASE;
-
-    this.bot = new IRCBot();
-    
-    this.bot.initializeBot();
   }
 
   public async launchBrowser(url: string = 'http://localhost:3000/'): Promise<void> {
@@ -33,28 +27,55 @@ export class ShoeCustomizer {
 
     this.page.on('console', (message: any) => console.log(`Puppeteer: ${message.text()}`))
 
-    await this.page.setViewport({height: 1080, width: 1920})
+    await this.page.setViewport({height: 768, width: 1024})
 
     await this.page.goto(url, {
       waitUntil: 'networkidle2'
     })
 
-    this.commandHandler = await this.page.evaluateHandle(() => {
-
-    })
-
     this.session = await this.page.target().createCDPSession();
+
+    this.bot = new IRCBot();
+    
+    this.bot.initializeBot((MCID: string) => this.setMC(MCID), (mid: string, qid: string, aid: string) => this.setColor(mid, qid, aid));
+  }
+
+  // public setColor(questionId: string, answerId: string) {
+  //   this.page.evaluateHandle((twitchApi: any, questionId: string, answerId: string) => {
+  //     twitchApi.setColor(questionId, answerId)
+  //   }, this.commandHandler, questionId, answerId)
+  // }
+
+  // public setMC(mcId: string) {
+  //   this.page.evaluateHandle((twitchApi: any, mcId: string) => {
+  //     twitchApi.setMarketingCOmponent(mcId)
+  //   }, this.commandHandler, mcId)
+  // }
+
+  public setColor(marketingComponentId: string, questionId: string, answerId: string) {
+    this.page.evaluate((marketingComponentId: string, questionId: string, answerId: string) => {
+      console.log((window as any).pdpApi.setAnswer ? 'SET ANSWER IS HERE' : 'NOPE');
+      (window as any).pdpApi.setColor(marketingComponentId, questionId, answerId)
+    },  marketingComponentId, questionId, answerId)
+  }
+
+  public setMC(mcId: string) {
+    this.page.evaluate((mcId: string) => {
+      (window as any).pdpApi.setMarketingComponent(mcId)
+    }, mcId)
   }
 
   public async startStream() {
     this.ffmpeg = spawn("ffmpeg",
-    ["-re", "-f", "png_pipe", "-vcodec", "png", "-i", "pipe:0", "-vcodec", "h264", "-f", "flv", RTMP_SERVER],
+    ["-framerate", "5", "-f", "png_pipe", "-vcodec", "png", "-i", "pipe:0", "-vcodec", "h264", "-g", "15", "-f", "flv", "-r", "25", RTMP_SERVER],
     { stdio: 'pipe' })
     
     await this.session.send('Page.startScreencast');
     this.session.on('Page.screencastFrame', event => {
       console.log('NEW FRAME');
-      this.frame = event.data;
+      const buffer = Buffer.from(event.data, 'base64');
+      this.ffmpeg.stdin.write(buffer);
+      this.session.send('Page.screencastFrameAck', { sessionId: event.sessionId }).catch(() => {});
     })
 
     // @ts-ignore no-implicit-any
@@ -64,11 +85,11 @@ export class ShoeCustomizer {
 
     setInterval(() => {
       if (!this.frame) return;
-      console.log("writing to ffmpeg");
-      const buffer = Buffer.from(this.frame, 'base64');
-      console.log(buffer);
+      // console.log("writing to ffmpeg");
+      // console.log(buffer);
+      // const buffer = Buffer.from(this.frame, 'base64');
+      // this.ffmpeg.stdin.write(buffer);
       
-      this.ffmpeg.stdin.write(buffer);
-    }, 1000 / 25)
+    }, 33)
   }
 }
